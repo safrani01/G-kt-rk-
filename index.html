@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="tr"><head>
+<meta charset="utf-8">
+<title>Göktürk Defteri</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="color-scheme" content="light dark">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1C5C86">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Sans+Old+Turkic&display=swap">
+<style>
+/* Layout: tek sütun, alt sekme çubuğu; taş gri zemin, gök mavisi vurgu, harfler büyük ve sağdan sola. */
+:root{
+  --bg:#E6EAE9; --surface:#F4F6F5; --raise:#FFFFFF; --ink:#172025; --muted:#56656A; --line:#C8D1D0;
+  --sky:#1C5C86; --sky-ink:#FFFFFF; --sky-soft:#D3E5F0;
+  --ok:#2B7A52; --ok-soft:#D6EBDE; --bad:#AE3F2E; --bad-soft:#F3D9D3; --warn:#A8700F; --warn-soft:#F1E3C3;
+  --f-head:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --f-body:'Hanken Grotesk','Segoe UI',system-ui,sans-serif;
+  --f-glyph:'Noto Sans Old Turkic','Noto Sans Old Turkic Regular','Segoe UI Historic','Noto Sans',sans-serif;
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0F1619; --surface:#172126; --raise:#1D2A30; --ink:#E3EBED; --muted:#93A5AA; --line:#2B3A40;
+    --sky:#6CB2DB; --sky-ink:#06202E; --sky-soft:#173241;
+    --ok:#5BBB88; --ok-soft:#163226; --bad:#E7877A; --bad-soft:#3A1F1B; --warn:#E0B25A; --warn-soft:#3B2E14;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0F1619; --surface:#172126; --raise:#1D2A30; --ink:#E3EBED; --muted:#93A5AA; --line:#2B3A40;
+  --sky:#6CB2DB; --sky-ink:#06202E; --sky-soft:#173241;
+  --ok:#5BBB88; --ok-soft:#163226; --bad:#E7877A; --bad-soft:#3A1F1B; --warn:#E0B25A; --warn-soft:#3B2E14;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:0 96px;-webkit-text-size-adjust:100%}
+button,input,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sky);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding-top:14px}
+h1,h2,h3{font-family:var(--f-head);line-height:1.15;margin:0;text-wrap:balance}
+h1{font-size:1.7rem;font-weight:700}
+h2{font-size:1.2rem;font-weight:700}
+h3{font-size:1rem;font-weight:700}
+p{margin:0 0 .7em}
+.muted{color:var(--muted)}
+.small{font-size:.86rem}
+.gl{font-family:var(--f-glyph);direction:rtl;unicode-bidi:isolate;line-height:1.25;letter-spacing:.06em}
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.top .sub{font-size:.88rem;color:var(--muted)}
+.stat{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:.84rem;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill b{font-family:var(--f-head)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card.raise{background:var(--raise)}
+.card h2{margin-bottom:6px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.between{justify-content:space-between}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 18px;border-radius:12px;border:1px solid var(--line);background:var(--raise);font-weight:700;text-align:center}
+.btn.main{background:var(--sky);color:var(--sky-ink);border-color:var(--sky)}
+.btn.block{display:flex;width:100%}
+.btn.ghost{background:transparent}
+.btn[disabled]{opacity:.5;cursor:default}
+.btn.sm{min-height:40px;padding:6px 14px;font-size:.92rem}
+.bar{height:10px;border-radius:999px;background:var(--line);overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--sky);border-radius:999px;transition:width .3s}
+.chips{display:flex;gap:8px;flex-wrap:wrap;direction:ltr}
+.chip{min-width:54px;height:62px;padding:0 8px;border-radius:12px;border:1px solid var(--line);background:var(--raise);display:flex;align-items:center;justify-content:center;font-size:2rem}
+.chip.word{font-size:1.5rem}
+button.chip{cursor:pointer}
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);display:flex;justify-content:center;
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabs-in{display:flex;width:100%;max-width:560px;gap:2px}
+.tab{flex:1;min-width:0;background:none;border:0;border-radius:10px;padding:6px 2px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:600;color:var(--muted)}
+.tab svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tab[aria-current="page"]{color:var(--sky);background:var(--sky-soft)}
+/* learn card */
+.big{font-size:5.2rem;text-align:center;padding:10px 0 4px}
+.big.w{font-size:3.4rem}
+.cap{text-align:center}
+.cap .sound{font-family:var(--f-head);font-size:1.7rem;font-weight:700}
+.letters{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;direction:rtl;margin:12px 0}
+.lt{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:46px;padding:6px 8px;border-radius:10px;background:var(--sky-soft)}
+.lt .gl{font-size:1.7rem}
+.lt span{font-size:.78rem;font-weight:700;direction:ltr}
+.note{background:var(--surface);border-left:4px solid var(--sky);border-radius:0 10px 10px 0;padding:10px 12px;margin:10px 0;font-size:.95rem}
+/* exercise */
+.q{font-family:var(--f-head);font-size:1.2rem;font-weight:700;margin:6px 0 12px;text-wrap:balance}
+.show{background:var(--raise);border:1px solid var(--line);border-radius:var(--r);padding:14px 10px;text-align:center;margin-bottom:14px}
+.show .gl{font-size:3.4rem}
+.show.lg .gl{font-size:5rem}
+.opts{display:grid;gap:10px}
+.opts.g2{grid-template-columns:1fr 1fr}
+.opt{min-height:56px;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--raise);font-weight:600;text-align:center;display:flex;align-items:center;justify-content:center}
+.opt.gl{font-size:2.3rem;font-weight:400;min-height:76px}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:var(--r);padding:12px 14px;margin:14px 0;font-size:.97rem}
+.fb.ok{background:var(--ok-soft);border:1px solid var(--ok)}
+.fb.no{background:var(--bad-soft);border:1px solid var(--bad)}
+.fb strong{font-family:var(--f-head)}
+.slots{min-height:76px;border:2px dashed var(--line);border-radius:var(--r);padding:8px;display:flex;gap:6px;flex-wrap:wrap;direction:rtl;align-items:center;margin-bottom:12px;background:var(--raise)}
+.tile{min-width:52px;height:60px;border-radius:10px;border:2px solid var(--line);background:var(--raise);font-size:2rem;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.tile.used{opacity:.3}
+.tiles{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;direction:ltr;margin-bottom:14px}
+input.txt{width:100%;min-height:52px;border-radius:12px;border:2px solid var(--line);background:var(--raise);padding:8px 14px;font-size:1.2rem}
+/* tables */
+.sec{margin:18px 0 8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px}
+.cell{position:relative;background:var(--raise);border:1px solid var(--line);border-radius:12px;padding:8px 4px 6px;text-align:center}
+.cell .gl{font-size:2.2rem;display:block}
+.cell small{display:block;font-weight:700;font-size:.8rem}
+.cell i{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--line)}
+.cell i.s1{background:var(--warn)} .cell i.s2{background:var(--ok)}
+.sheet{background:var(--raise);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin:10px 0}
+.ph{background:var(--raise);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.phg{display:flex;flex-wrap:wrap;direction:rtl;gap:4px 6px;align-items:center;margin:6px 0 10px}
+.wd{background:none;border:2px solid transparent;border-radius:10px;padding:2px 6px;font-family:var(--f-glyph);font-size:2rem;line-height:1.3;direction:rtl}
+.wd.on{border-color:var(--sky);background:var(--sky-soft)}
+.sep{color:var(--muted);font-family:var(--f-body);font-size:1.2rem}
+.rd{background:var(--sky-soft);border-radius:10px;padding:8px 12px;font-size:.95rem;margin:6px 0}
+details.k{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:0 14px;margin-bottom:10px}
+details.k summary{padding:14px 0;font-family:var(--f-head);font-weight:700;cursor:pointer}
+details.k .body{padding-bottom:12px}
+.ex{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:8px 0}
+.ex .gl{font-size:2.2rem}
+table.t{border-collapse:collapse;width:100%;font-size:.92rem}
+table.t td,table.t th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left}
+textarea.bk{width:100%;min-height:110px;border-radius:12px;border:1px solid var(--line);background:var(--raise);padding:10px;font-size:.8rem;font-family:ui-monospace,monospace}
+.hdr{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.hdr .bar{flex:1}
+.back{min-height:40px;padding:6px 12px}
+svg.chart text{fill:var(--muted);font-size:10px;font-family:var(--f-body)}
+svg.chart .b1{fill:var(--sky)} svg.chart .b2{fill:var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head><body>
+<div id="app"></div>
+<script>
+"use strict";
+const D = {"L":[{"id":"L0","g":"𐰀","s":"a / e","cat":"ünlü","note":"a ve e için tek işaret. Sözcük başında ve sonunda yazılır; ortada çoğu zaman hiç yazılmaz.","k":"a","ex":"w46"},{"id":"L1","g":"𐰃","s":"ı / i","cat":"ünlü","note":"ı ve i için tek işaret. Sözcük ortasında çoğu zaman yazılmaz.","k":"i","ex":"w0"},{"id":"L2","g":"𐰆","s":"o / u","cat":"ünlü","note":"o ve u için tek işaret. Yazıtlarda genellikle sözcüğün ilk hecesinde yazılır.","k":"o","ex":"w3"},{"id":"L3","g":"𐰇","s":"ö / ü","cat":"ünlü","note":"ö ve ü için tek işaret.","k":"u","ex":"w1"},{"id":"L4","g":"𐰉","s":"b (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan b.","k":"b","ex":"w3"},{"id":"L5","g":"𐰋","s":"b (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan b.","k":"B","ex":"w36"},{"id":"L6","g":"𐰑","s":"d (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan d.","k":"d","ex":"w3"},{"id":"L7","g":"𐰓","s":"d (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan d.","k":"D","ex":"w80"},{"id":"L8","g":"𐰍","s":"g (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan g. Kalın sesli g, ğ gibi okunur.","k":"g","ex":"w2"},{"id":"L9","g":"𐰏","s":"g (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan g.","k":"G","ex":"w50"},{"id":"L10","g":"𐰖","s":"y (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan y.","k":"y","ex":"w43"},{"id":"L11","g":"𐰘","s":"y (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan y.","k":"Y","ex":"w6"},{"id":"L12","g":"𐰴","s":"k (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan k.","k":"k","ex":"w2"},{"id":"L13","g":"𐰚","s":"k (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan k.","k":"K","ex":"w8"},{"id":"L14","g":"𐰞","s":"l (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan l.","k":"l","ex":"w35"},{"id":"L15","g":"𐰠","s":"l (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan l.","k":"L","ex":"w5"},{"id":"L16","g":"𐰺","s":"r (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan r.","k":"r","ex":"w61"},{"id":"L17","g":"𐰼","s":"r (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan r.","k":"R","ex":"w36"},{"id":"L18","g":"𐰽","s":"s (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan s.","k":"s","ex":"w7"},{"id":"L19","g":"𐰾","s":"s (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan s.","k":"S","ex":"w27"},{"id":"L20","g":"𐱃","s":"t (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan t.","k":"t","ex":"w10"},{"id":"L21","g":"𐱅","s":"t (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan t.","k":"T","ex":"w0"},{"id":"L22","g":"𐰣","s":"n (kalın)","cat":"kalın","note":"a, ı, o, u ile yazılan sözcüklerde kullanılan n.","k":"n","ex":"w3"},{"id":"L23","g":"𐰤","s":"n (ince)","cat":"ince","note":"e, i, ö, ü ile yazılan sözcüklerde kullanılan n.","k":"N","ex":"w8"},{"id":"L24","g":"𐰢","s":"m","cat":"tek","note":"Kalın ve ince sözcüklerde aynı işaret kullanılır.","k":"m","ex":"w21"},{"id":"L25","g":"𐰕","s":"z","cat":"tek","note":"Kalın ve ince sözcüklerde aynı işaret kullanılır.","k":"z","ex":"w41"},{"id":"L26","g":"𐰯","s":"p","cat":"tek","note":"Kalın ve ince sözcüklerde aynı işaret kullanılır.","k":"p","ex":"w63"},{"id":"L27","g":"𐱁","s":"ş","cat":"tek","note":"Kalın ve ince sözcüklerde aynı işaret kullanılır.","k":"h","ex":"w10"},{"id":"L28","g":"𐰲","s":"ç","cat":"tek","note":"Kalın ve ince sözcüklerde aynı işaret kullanılır.","k":"c","ex":"w48"},{"id":"L29","g":"𐰨","s":"nç","cat":"çift","note":"İki sesi birden gösterir: n + ç.","k":"1","ex":"w45"},{"id":"L30","g":"𐰭","s":"ŋ (ng)","cat":"çift","note":"Genizden gelen n sesi; teŋri, kaŋım gibi.","k":"q","ex":"w0"},{"id":"L31","g":"𐰦","s":"nt","cat":"çift","note":"İki sesi birden gösterir: n + t.","k":"2","ex":"w47"},{"id":"L32","g":"𐰪","s":"ny (ñ)","cat":"çift","note":"İki sesi birden gösterir: n + y.","k":"3","ex":"w129"},{"id":"L33","g":"𐰡","s":"lt","cat":"çift","note":"İki sesi birden gösterir: l + t.","k":"4","ex":"w59"},{"id":"L34","g":"𐰶","s":"ık","cat":"çift","note":"Ünlü + ünsüz birlikte: kalın ünlüyle ık.","k":"5","ex":"w87"},{"id":"L35","g":"𐰸","s":"ok / uk","cat":"çift","note":"Ünlü + ünsüz birlikte: o ya da u ile k.","k":"6","ex":"w43"},{"id":"L36","g":"𐰰","s":"ök / ük","cat":"çift","note":"Ünlü + ünsüz birlikte: ö ya da ü ile k. Türk sözcüğü bununla biter.","k":"7","ex":"w1"}],"W":[{"id":"w0","g":"𐱅𐰭𐰼𐰃","o":"teŋri","m":"Tanrı, gök"},{"id":"w1","g":"𐱅𐰇𐰼𐰰","o":"türk","m":"Türk"},{"id":"w2","g":"𐰴𐰍𐰣","o":"kağan","m":"kağan, hükümdar"},{"id":"w3","g":"𐰉𐰆𐰑𐰣","o":"bodun","m":"halk, boy, millet"},{"id":"w4","g":"𐰋𐰃𐰠𐰏𐰀","o":"bilge","m":"bilge, bilgili"},{"id":"w5","g":"𐰃𐰠","o":"il","m":"devlet, ülke, yurt"},{"id":"w6","g":"𐰘𐰃𐰼","o":"yir","m":"yer"},{"id":"w7","g":"𐰽𐰆𐰉","o":"sub","m":"su"},{"id":"w8","g":"𐰚𐰇𐰤","o":"kün","m":"gün, güneş"},{"id":"w9","g":"𐱅𐰇𐰤","o":"tün","m":"gece"},{"id":"w10","g":"𐱃𐱁","o":"taş","m":"taş"},{"id":"w11","g":"𐰋𐰭𐰏𐰇","o":"beŋgü","m":"ebedî, sonsuz"},{"id":"w12","g":"𐰋𐰃𐱅𐰏","o":"bitig","m":"yazı, yazıt"},{"id":"w13","g":"𐰚𐰇𐰠𐱅𐰃𐰏𐰤","o":"kül tigin","m":"Kül Tigin (anıtın adandığı prens)"},{"id":"w14","g":"𐰋𐰏","o":"beg","m":"bey"},{"id":"w15","g":"𐰋𐰏𐰠𐰼","o":"beglär","m":"beyler"},{"id":"w16","g":"𐰋𐰏𐰠𐰼𐰃","o":"beglări","m":"beyleri"},{"id":"w17","g":"𐰇𐱅𐰰𐰤","o":"ötüken","m":"Ötüken (kutsal orman, yurt)"},{"id":"w18","g":"𐰘𐰃𐱁","o":"yış","m":"dağlık orman, ormanlık dağ"},{"id":"w19","g":"𐰸𐰆𐱃𐰢","o":"kutum","m":"kutum (tanrısal destek, talih)"},{"id":"w20","g":"𐰇𐰕𐰢","o":"özüm","m":"kendim, özüm"},{"id":"w21","g":"𐰴𐰭𐰢","o":"kaŋım","m":"babam"},{"id":"w22","g":"𐰇𐰏𐰢","o":"ögüm","m":"annem"},{"id":"w23","g":"𐰃𐰤𐰢","o":"inim","m":"küçük kardeşim"},{"id":"w24","g":"𐰲𐰃𐰢","o":"eçim","m":"amcam"},{"id":"w25","g":"𐰼","o":"er","m":"er, adam, yiğit"},{"id":"w26","g":"𐰚𐰃𐰾𐰃","o":"kişi","m":"kişi, insan"},{"id":"w27","g":"𐰾𐰇","o":"sü","m":"ordu, asker"},{"id":"w28","g":"𐰾𐰇𐰾𐰃","o":"süsi","m":"ordusu, askeri"},{"id":"w29","g":"𐰖𐰍𐰃","o":"yağı","m":"düşman"},{"id":"w30","g":"𐰖𐰍𐰃𐰾𐰃","o":"yağısı","m":"düşmanı"},{"id":"w31","g":"𐰋𐰇𐰼𐰃","o":"böri","m":"kurt"},{"id":"w32","g":"𐰸𐰆𐰪","o":"koñ","m":"koyun"},{"id":"w33","g":"𐰞𐰯","o":"alp","m":"yiğit, cesur"},{"id":"w34","g":"𐰉𐰆","o":"bu","m":"bu"},{"id":"w35","g":"𐰆𐰞","o":"ol","m":"o"},{"id":"w36","g":"𐰋𐰃𐰼","o":"bir","m":"bir"},{"id":"w37","g":"𐰚𐰃","o":"iki","m":"iki"},{"id":"w38","g":"𐱅𐰇𐰼𐱅","o":"tört","m":"dört"},{"id":"w39","g":"𐰋𐰃𐱁","o":"biş","m":"beş"},{"id":"w40","g":"𐰘𐰃𐱅𐰃","o":"yiti","m":"yedi"},{"id":"w41","g":"𐰆𐱃𐰕","o":"otuz","m":"otuz"},{"id":"w42","g":"𐱃𐰸𐰆𐰕","o":"tokuz","m":"dokuz"},{"id":"w43","g":"𐰖𐰸","o":"yok","m":"yok"},{"id":"w44","g":"𐰴𐰆𐰯","o":"kop","m":"hep, tümü"},{"id":"w45","g":"𐰨𐰀","o":"ança","m":"öyle, o kadar"},{"id":"w46","g":"𐰉𐰆𐰨𐰀","o":"bunça","m":"bunca"},{"id":"w47","g":"𐰦𐰀","o":"anta","m":"orada, o anda"},{"id":"w48","g":"𐰇𐰲𐰇𐰤","o":"üçün","m":"için"},{"id":"w49","g":"𐱅𐰏𐰃","o":"tegi","m":"değin, -e kadar"},{"id":"w50","g":"𐱅𐰏","o":"teg","m":"gibi"},{"id":"w51","g":"𐰋𐰃𐰼𐰠𐰀","o":"birle","m":"ile"},{"id":"w52","g":"𐱃𐰯𐰀","o":"tapa","m":"-e doğru"},{"id":"w53","g":"𐰇𐰕𐰀","o":"üze","m":"üstte, üzerine"},{"id":"w54","g":"𐰘𐰢𐰀","o":"yime","m":"yine, ayrıca"},{"id":"w55","g":"𐰖𐰣𐰀","o":"yana","m":"yine, geri"},{"id":"w56","g":"𐰚𐰃𐰾𐰼𐰀","o":"kisre","m":"sonra"},{"id":"w57","g":"𐰼𐱅𐰃","o":"erti","m":"idi"},{"id":"w58","g":"𐰼𐰢𐰾","o":"ermiş","m":"imiş"},{"id":"w59","g":"𐰉𐰆𐰡𐰃","o":"boldı","m":"oldu"},{"id":"w60","g":"𐰉𐰆𐰞𐰢𐱁","o":"bolmış","m":"olmuş"},{"id":"w61","g":"𐰉𐰺","o":"bar","m":"var"},{"id":"w62","g":"𐰉𐰺𐰑𐰍","o":"bardıg","m":"vardın"},{"id":"w63","g":"𐰆𐰞𐰺𐰯","o":"olurup","m":"oturup"},{"id":"w64","g":"𐰆𐰞𐰺𐱃𐰢","o":"olurtum","m":"oturdum"},{"id":"w65","g":"𐰆𐰞𐰺𐰽𐰺","o":"olursar","m":"oturursa"},{"id":"w66","g":"𐰆𐰞𐰺𐱃𐰲𐰃","o":"olurtaçı","m":"oturacak"},{"id":"w67","g":"𐰋𐰃𐰼𐰢𐰾","o":"birmiş","m":"vermiş"},{"id":"w68","g":"𐰋𐰃𐰼𐰇𐰼","o":"berür","m":"verir"},{"id":"w69","g":"𐰋𐰃𐰼𐱅𐰰","o":"bertük","m":"verdiği"},{"id":"w70","g":"𐰇𐰠𐱅𐰃","o":"ölti","m":"öldü"},{"id":"w71","g":"𐰚𐰠𐱅𐰃","o":"kelti","m":"geldi"},{"id":"w72","g":"𐱅𐰏𐰓𐰃","o":"tegdi","m":"değdi, saldırdı"},{"id":"w73","g":"𐰋𐰃𐰤𐰯","o":"binip","m":"binip"},{"id":"w74","g":"𐰾𐰇𐰭𐱁𐰓𐰢𐰕","o":"süŋüşdimiz","m":"savaştık"},{"id":"w75","g":"𐰾𐰇𐰠𐰓𐰢","o":"süledim","m":"ordu sürdüm"},{"id":"w76","g":"𐰞𐱃𐰢𐰕","o":"altımız","m":"aldık"},{"id":"w77","g":"𐰇𐰠𐰼𐱅𐰢𐰕","o":"ölürtümüz","m":"öldürdük"},{"id":"w78","g":"𐰽𐰴𐰦𐰢","o":"sakındım","m":"sakındım"},{"id":"w79","g":"𐰋𐰃𐰠𐰢𐰕","o":"bilmez","m":"bilmez"},{"id":"w80","g":"𐰓𐰏𐰇","o":"edgü","m":"iyi"},{"id":"w81","g":"𐰖𐰉𐰞𐰴","o":"yablak","m":"kötü"},{"id":"w82","g":"𐰋𐰃𐰠𐰏𐰾𐰃𐰕","o":"bilgisiz","m":"bilgisiz"},{"id":"w83","g":"𐰾𐰇𐰲𐰃𐰏","o":"süçig","m":"tatlı"},{"id":"w84","g":"𐰘𐰃𐰢𐱁𐰴","o":"yımşak","m":"yumuşak"},{"id":"w85","g":"𐱃𐰉𐰍𐰲","o":"tabgaç","m":"Çin, Çinli"},{"id":"w86","g":"𐰆𐰍𐰕","o":"oğuz","m":"Oğuz"},{"id":"w87","g":"𐰶𐰃𐰺𐰴𐰕","o":"kırgız","m":"Kırgız"},{"id":"w88","g":"𐰶𐰃𐱃𐰪","o":"kıtañ","m":"Kıtay"},{"id":"w89","g":"𐱃𐱃𐰉𐰃","o":"tatabı","m":"Tatabı (bir boy adı)"},{"id":"w90","g":"𐱅𐰇𐰼𐰏𐰾","o":"türgiş","m":"Türgiş (bir boy adı)"},{"id":"w91","g":"𐱁𐰞𐰲𐰃","o":"şalçı","m":"Şalçı (bir alpin adı)"},{"id":"w92","g":"𐰴𐰺𐰀","o":"kara","m":"kara"},{"id":"w93","g":"𐰉𐰆𐰕","o":"boz","m":"boz (at rengi)"},{"id":"w94","g":"𐰽𐰉𐰢𐰣","o":"sabımın","m":"sözümü"},{"id":"w95","g":"𐰽𐰉𐰢","o":"sabım","m":"sözüm"},{"id":"w96","g":"𐰽𐰉𐰃","o":"sabı","m":"sözü"},{"id":"w97","g":"𐰃𐰾𐰏","o":"işig","m":"iş, hizmet"},{"id":"w98","g":"𐰚𐰇𐰲𐰏","o":"küçüg","m":"güç, emek"},{"id":"w99","g":"𐰸𐰆𐰺𐰍𐰺𐰆","o":"kurıgaru","m":"batıya doğru"},{"id":"w100","g":"𐰃𐰠𐰏𐰼𐰇","o":"ilgerü","m":"doğuya (ileri)"},{"id":"w101","g":"𐰾𐰤","o":"sen","m":"sen"},{"id":"w102","g":"𐰤𐰭","o":"neŋ","m":"ne, her ne"},{"id":"w103","g":"𐰉𐰆𐰭","o":"buŋ","m":"tasa, dert"},{"id":"w104","g":"𐱅𐰃𐰘𐰤","o":"tiyin","m":"diye"},{"id":"w105","g":"𐰉𐰆𐰞𐰢𐰕𐰆𐰣","o":"bolmazun","m":"olmasın"},{"id":"w106","g":"𐰉𐰆𐰞𐰲𐰆𐰣","o":"bolçun","m":"olsun"},{"id":"w107","g":"𐱃𐰆𐱃𐰀","o":"tuta","m":"tutarak"},{"id":"w108","g":"𐱃𐰆𐱃𐰽𐰴","o":"tutsık","m":"tutulacak"},{"id":"w109","g":"𐱅𐰃𐰼𐰯","o":"tirip","m":"toplayıp"},{"id":"w110","g":"𐰆𐰺𐱃𐰢","o":"urtum","m":"vurdum, yazdım"},{"id":"w111","g":"𐰉𐰆𐰦𐰀","o":"bunta","m":"burada"},{"id":"w112","g":"𐱃𐱁𐰴𐰀","o":"taşka","m":"taşa"},{"id":"w113","g":"𐰭𐰺","o":"aŋar","m":"ona"},{"id":"w114","g":"𐰚𐰇𐰼𐰇","o":"körü","m":"görüp"},{"id":"w115","g":"𐰋𐰃𐰠𐰭","o":"biliŋ","m":"bilin"},{"id":"w116","g":"𐰾𐰓𐰭","o":"eşidiŋ","m":"işitin"},{"id":"w117","g":"𐰾𐰃𐰓𐰏𐰠","o":"eşidgil","m":"işit"},{"id":"w118","g":"𐱅𐰇𐰚𐱅𐰃","o":"tüketi","m":"tüketene (dek)"},{"id":"w119","g":"𐰇𐰓𐰚𐰀","o":"ödke","m":"çağda, zamanda"},{"id":"w120","g":"𐱅𐰭𐰼𐰃𐰓𐰀","o":"teŋride","m":"gökte"},{"id":"w121","g":"𐰃𐰠𐱅𐰀","o":"ilte","m":"ilde"},{"id":"w122","g":"𐰖𐰺𐰞𐰴𐰑𐰸𐰃𐰤","o":"yarlıkadukın","m":"buyurduğu"},{"id":"w123","g":"𐰴𐰍𐰣𐰍","o":"kağanıg","m":"kağanı"},{"id":"w124","g":"𐰃𐰠𐱅𐰼𐰾","o":"ilteriş","m":"İlteriş (kağanın adı)"},{"id":"w125","g":"𐰃𐰠𐰋𐰃𐰠𐰏𐰀","o":"ilbilge","m":"İlbilge (hatunun adı)"},{"id":"w126","g":"𐰴𐱃𐰆𐰣𐰍","o":"katunıg","m":"hatunu"},{"id":"w127","g":"𐰼𐰨","o":"erinç","m":"«tabiî» (cümleyi pekiştirir)"},{"id":"w128","g":"𐰖𐱁𐰃𐰭𐰀","o":"yaşıŋa","m":"yaşında"},{"id":"w129","g":"𐰲𐰃𐰍𐰪","o":"çığañ","m":"yoksul"},{"id":"w130","g":"𐰉𐰽𐰢𐰽𐰺","o":"basmasar","m":"basmasa"},{"id":"w131","g":"𐰽𐰺𐰀","o":"asra","m":"altta"},{"id":"w132","g":"𐱅𐰠𐰤𐰢𐰾𐰼","o":"telinmeser","m":"delinmese"},{"id":"w133","g":"𐰍𐰃𐰾𐰃","o":"agısı","m":"ipeği"},{"id":"w134","g":"𐱃𐰆𐱃𐰽𐰴𐰭𐰣","o":"tutsıkıŋın","m":"tutacağını"},{"id":"w135","g":"𐰼𐰾𐰼","o":"ersär","m":"ise"},{"id":"w136","g":"𐰆𐰞𐰺𐰢𐰾","o":"olurmış","m":"oturmuş"}],"P":[{"id":"p0","w":[{"g":"𐱅𐰭𐰼𐰃","o":"teŋri","m":"Tanrı","v":"w0"},{"g":"𐱅𐰏","o":"teg","m":"gibi","v":"w50"},{"g":"𐱅𐰭𐰼𐰃𐰓𐰀","o":"teŋride","m":"gökte","v":"w120"},{"g":"𐰉𐰆𐰞𐰢𐱁","o":"bolmış","m":"olmuş","v":"w60"},{"g":"𐱅𐰇𐰼𐰰","o":"türk","m":"Türk","v":"w1"},{"g":"𐰋𐰃𐰠𐰏𐰀","o":"bilge","m":"bilge","v":"w4"},{"g":"𐰴𐰍𐰣","o":"kağan","m":"kağan","v":"w2"},{"g":"𐰉𐰆","o":"bu","m":"bu","v":"w34"},{"g":"𐰇𐰓𐰚𐰀","o":"ödke","m":"çağda","v":"w119"},{"g":"𐰆𐰞𐰺𐱃𐰢","o":"olurtum","m":"oturdum","v":"w64"}],"tr":"Tanrı gibi gökte olmuş Türk Bilge Kağan, bu çağda oturdum.","ref":"Güney yüzü, 1. dizi"},{"id":"p1","w":[{"g":"𐰽𐰉𐰢𐰣","o":"sabımın","m":"sözümü","v":"w94"},{"g":"𐱅𐰇𐰚𐱅𐰃","o":"tüketi","m":"tüketene dek","v":"w118"},{"g":"𐰾𐰃𐰓𐰏𐰠","o":"eşidgil","m":"işit","v":"w117"}],"tr":"Sözümü tüketene dek işit.","ref":"Güney yüzü, 1. dizi"},{"id":"p2","w":[{"g":"𐱅𐰇𐰼𐰰","o":"türk","m":"Türk","v":"w1"},{"g":"𐰴𐰍𐰣","o":"kağan","m":"kağanı","v":"w2"},{"g":"𐰇𐱅𐰰𐰤","o":"ötüken","m":"Ötüken","v":"w17"},{"g":"𐰘𐰃𐱁","o":"yış","m":"ormanında","v":"w18"},{"g":"𐰆𐰞𐰺𐰽𐰺","o":"olursar","m":"oturursa","v":"w65"},{"g":"𐰃𐰠𐱅𐰀","o":"ilte","m":"ilde","v":"w121"},{"g":"𐰉𐰆𐰭","o":"buŋ","m":"tasa","v":"w103"},{"g":"𐰖𐰸","o":"yok","m":"yok","v":"w43"}],"tr":"Türk kağanı Ötüken ormanında oturursa, ilde tasa yok.","ref":"Güney yüzü, 3. dizi"},{"id":"p3","w":[{"g":"𐰃𐰠","o":"il","m":"il","v":"w5"},{"g":"𐱃𐰆𐱃𐰽𐰴","o":"tutsık","m":"tutulacak","v":"w108"},{"g":"𐰘𐰃𐰼","o":"yir","m":"yer","v":"w6"},{"g":"𐰇𐱅𐰰𐰤","o":"ötüken","m":"Ötüken","v":"w17"},{"g":"𐰘𐰃𐱁","o":"yış","m":"ormanı","v":"w18"},{"g":"𐰼𐰢𐱁","o":"ermiş","m":"imiş","v":"w58"}],"tr":"İl tutulacak yer Ötüken ormanı imiş.","ref":"Güney yüzü, 4. dizi"},{"id":"p4","w":[{"g":"𐱃𐰉𐰍𐰲","o":"tabgaç","m":"Çin","v":"w85"},{"g":"𐰉𐰆𐰑𐰣","o":"bodun","m":"boyları","v":"w3"},{"g":"𐰽𐰉𐰃","o":"sabı","m":"sözü","v":"w96"},{"g":"𐰾𐰇𐰲𐰃𐰏","o":"süçig","m":"tatlı","v":"w83"},{"g":"𐰍𐰃𐰾𐰃","o":"agısı","m":"ipeği","v":"w133"},{"g":"𐰘𐰃𐰢𐱁𐰴","o":"yımşak","m":"yumuşak","v":"w84"},{"g":"𐰼𐰢𐰾","o":"ermiş","m":"imiş","v":"w58"}],"tr":"Çin boylarının sözü tatlı, ipeği yumuşak imiş.","ref":"Güney yüzü, 5. dizi"},{"id":"p5","w":[{"g":"𐰇𐱅𐰰𐰤","o":"ötüken","m":"Ötüken","v":"w17"},{"g":"𐰘𐰃𐱁","o":"yış","m":"ormanında","v":"w18"},{"g":"𐰆𐰞𐰺𐰽𐰺","o":"olursar","m":"oturursan","v":"w65"},{"g":"𐰋𐰭𐰏𐰇","o":"beŋgü","m":"sonsuz","v":"w11"},{"g":"𐰃𐰠","o":"il","m":"il","v":"w5"},{"g":"𐱃𐰆𐱃𐰀","o":"tuta","m":"tutarak","v":"w107"},{"g":"𐰆𐰞𐰺𐱃𐰲𐰃","o":"olurtaçı","m":"oturacak","v":"w66"},{"g":"𐰾𐰤","o":"sen","m":"sen","v":"w101"}],"tr":"Ötüken ormanında oturursan, sonsuz ili tutarak oturacaksın.","ref":"Güney yüzü, 8. dizi"},{"id":"p6","w":[{"g":"𐱅𐰭𐰼𐰃","o":"teŋri","m":"Tanrı","v":"w0"},{"g":"𐰖𐰺𐰞𐰴𐰑𐰸𐰃𐰤","o":"yarlıkadukın","m":"buyurduğu","v":"w122"},{"g":"𐰇𐰲𐰇𐰤","o":"üçün","m":"için","v":"w48"},{"g":"𐰇𐰕𐰢","o":"özüm","m":"özüm","v":"w20"},{"g":"𐰸𐰆𐱃𐰢","o":"kutum","m":"kutum","v":"w19"},{"g":"𐰉𐰺","o":"bar","m":"var","v":"w61"},{"g":"𐰇𐰲𐰇𐰤","o":"üçün","m":"için","v":"w48"},{"g":"𐰴𐰍𐰣","o":"kağan","m":"kağan","v":"w2"},{"g":"𐰆𐰞𐰺𐱃𐰢","o":"olurtum","m":"oturdum","v":"w64"}],"tr":"Tanrı buyurduğu için, özüm kutum var olduğu için kağan oturdum.","ref":"Güney yüzü, 9. dizi"},{"id":"p7","w":[{"g":"𐱅𐰇𐰼𐰰","o":"türk","m":"Türk","v":"w1"},{"g":"𐰉𐰆𐰑𐰣","o":"bodun","m":"boyları","v":"w3"},{"g":"𐱅𐰃𐰼𐰯","o":"tirip","m":"toplayıp","v":"w109"},{"g":"𐰃𐰠","o":"il","m":"il","v":"w5"},{"g":"𐱃𐰆𐱃𐰽𐰴𐰭𐰣","o":"tutsıkıŋın","m":"tutacağını","v":"w134"},{"g":"𐰉𐰆𐰦𐰀","o":"bunta","m":"burada","v":"w111"},{"g":"𐰆𐰺𐱃𐰢","o":"urtum","m":"vurdum, yazdım","v":"w110"}],"tr":"Türk boylarını toplayıp il tutacağını burada vurdum (yazdım).","ref":"Güney yüzü, 10. dizi"},{"id":"p8","w":[{"g":"𐰤𐰭","o":"neŋ","m":"nice","v":"w102"},{"g":"𐰤𐰭","o":"neŋ","m":"nice","v":"w102"},{"g":"𐰽𐰉𐰢","o":"sabım","m":"sözüm","v":"w95"},{"g":"𐰼𐰾𐰼","o":"ersär","m":"ise","v":"w135"},{"g":"𐰋𐰭𐰏𐰇","o":"beŋgü","m":"Bengü","v":"w11"},{"g":"𐱃𐱁𐰴𐰀","o":"taşka","m":"taşa","v":"w112"},{"g":"𐰆𐰺𐱃𐰢","o":"urtum","m":"vurdum","v":"w110"}],"tr":"Nice nice sözüm var ise Bengü taşa vurdum.","ref":"Güney yüzü, 11. dizi"},{"id":"p9","w":[{"g":"𐰋𐰃𐰠𐰏𐰾𐰃𐰕","o":"bilgisiz","m":"bilgisiz","v":"w82"},{"g":"𐰴𐰍𐰣","o":"kağan","m":"kağan","v":"w2"},{"g":"𐰆𐰞𐰺𐰢𐰾","o":"olurmış","m":"oturmuş","v":"w136"},{"g":"𐰼𐰨","o":"erinç","m":"tabiî","v":"w127"},{"g":"𐰖𐰉𐰞𐰴","o":"yablak","m":"kötü","v":"w81"},{"g":"𐰴𐰍𐰣","o":"kağan","m":"kağan","v":"w2"},{"g":"𐰆𐰞𐰺𐰢𐰾","o":"olurmış","m":"oturmuş","v":"w136"},{"g":"𐰼𐰨","o":"erinç","m":"tabiî","v":"w127"}],"tr":"Bilgisiz kağan oturmuş tabiî, kötü kağan oturmuş tabiî.","ref":"Doğu yüzü, 5. dizi"},{"id":"p10","w":[{"g":"𐰇𐰕𐰀","o":"üze","m":"üstte","v":"w53"},{"g":"𐱅𐰭𐰼𐰃","o":"teŋri","m":"gök","v":"w0"},{"g":"𐰉𐰽𐰢𐰽𐰺","o":"basmasar","m":"basmasa","v":"w130"},{"g":"𐰽𐰺𐰀","o":"asra","m":"altta","v":"w131"},{"g":"𐰘𐰃𐰼","o":"yir","m":"yer","v":"w6"},{"g":"𐱅𐰠𐰤𐰢𐰾𐰼","o":"telinmeser","m":"delinmese","v":"w132"}],"tr":"Üstte gök basmasa, altta yer delinmese,","ref":"Doğu yüzü, 22. dizi"},{"id":"p11","w":[{"g":"𐱅𐰇𐰼𐰰","o":"türk","m":"Türk","v":"w1"},{"g":"𐰆𐰍𐰕","o":"oğuz","m":"Oğuz","v":"w86"},{"g":"𐰋𐰏𐰠𐰼𐰃","o":"beglări","m":"beyleri","v":"w16"},{"g":"𐰉𐰆𐰑𐰣","o":"bodun","m":"boyları","v":"w3"},{"g":"𐰾𐰓𐰭","o":"eşidiŋ","m":"işitin","v":"w116"}],"tr":"Türk Oğuz beyleri, boyları, işitin!","ref":"Doğu yüzü, 22. dizi"},{"id":"p12","w":[{"g":"𐱅𐰇𐰼𐰰","o":"türk","m":"Türk","v":"w1"},{"g":"𐰉𐰆𐰑𐰣","o":"bodun","m":"halkı","v":"w3"},{"g":"𐰖𐰆𐰸","o":"yok","m":"yok","v":"w43"},{"g":"𐰉𐰆𐰞𐰢𐰕𐰆𐰣","o":"bolmazun","m":"olmasın","v":"w105"},{"g":"𐱅𐰃𐰘𐰤","o":"tiyin","m":"diye","v":"w104"},{"g":"𐰉𐰆𐰑𐰣","o":"bodun","m":"halk","v":"w3"},{"g":"𐰉𐰆𐰞𐰲𐰆𐰣","o":"bolçun","m":"olsun","v":"w106"},{"g":"𐱅𐰃𐰘𐰤","o":"tiyin","m":"diye","v":"w104"}],"tr":"Türk milleti yok olmasın diye, millet olsun diye,","ref":"Doğu yüzü, 11. dizi"},{"id":"p13","w":[{"g":"𐰴𐰭𐰢","o":"kaŋım","m":"babam","v":"w21"},{"g":"𐰃𐰠𐱅𐰼𐰾","o":"ilteriş","m":"İlteriş","v":"w124"},{"g":"𐰴𐰍𐰣𐰍","o":"kağanıg","m":"kağanı","v":"w123"},{"g":"𐰇𐰏𐰢","o":"ögüm","m":"annem","v":"w22"},{"g":"𐰃𐰠𐰋𐰃𐰠𐰏𐰀","o":"ilbilge","m":"İlbilge","v":"w125"},{"g":"𐰴𐱃𐰆𐰣𐰍","o":"katunıg","m":"hatunu","v":"w126"}],"tr":"Babam İlteriş Kağan'ı, annem İlbilge Hatun'u","ref":"Doğu yüzü, 11. dizi"},{"id":"p14","w":[{"g":"𐰴𐰭𐰢","o":"kaŋım","m":"babam","v":"w21"},{"g":"𐰴𐰍𐰣","o":"kağan","m":"kağanın","v":"w2"},{"g":"𐰾𐰇𐰾𐰃","o":"süsi","m":"askeri","v":"w28"},{"g":"𐰋𐰇𐰼𐰃","o":"böri","m":"kurt","v":"w31"},{"g":"𐱅𐰏","o":"teg","m":"gibi","v":"w50"},{"g":"𐰼𐰢𐰾","o":"ermiş","m":"imiş","v":"w58"},{"g":"𐰖𐰍𐰃𐰾𐰃","o":"yağısı","m":"düşmanı","v":"w30"},{"g":"𐰸𐰆𐰪","o":"koñ","m":"koyun","v":"w32"},{"g":"𐱅𐰏","o":"teg","m":"gibi","v":"w50"},{"g":"𐰼𐰢𐰾","o":"ermiş","m":"imiş","v":"w58"}],"tr":"Babam kağanın askeri kurt gibi imiş, düşmanı koyun gibi imiş.","ref":"Doğu yüzü, 12. dizi"}]};
+const ITEMS = [...D.L.map(x => ({...x, t: 'L'})), ...D.W.map(x => ({...x, t: 'W'}))];
+const BY = {}; ITEMS.forEach(x => BY[x.id] = x);
+const LG = {}; D.L.forEach(l => LG[l.g] = l);
+const INT = [1, 3, 7, 14, 30];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+const pad = n => String(n).padStart(2, '0');
+const dstr = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const todayS = () => dstr(new Date());
+const addDays = (s, n) => { const [y, m, d] = s.split('-').map(Number); return dstr(new Date(y, m - 1, d + n)); };
+const shuf = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const chars = s => Array.from(s);
+const G = g => `<span class="gl">${g}</span>`;
+
+/* ---------- durum + kayıt ---------- */
+function fresh() { return {v: 1, t: 0, intro: 0, items: {}, hist: {}, today: null, ph: {}}; }
+let S = fresh();
+try { const r = localStorage.getItem('gk1'); if (r) { const o = JSON.parse(r); if (o && o.v === 1) S = o; } } catch (e) {}
+let DB = null, UID = null, pushing = false, pushAgain = false, pushTimer = null;
+const PATH = () => 'data/users/' + UID + '/progress';
+function saveLocal() { try { localStorage.setItem('gk1', JSON.stringify(S)); } catch (e) {} }
+function save() { S.t = Date.now(); saveLocal(); clearTimeout(pushTimer); pushTimer = setTimeout(pushRemote, 800); }
+async function pushRemote() {
+  if (!DB || !UID) return;
+  if (pushing) { pushAgain = true; return; }
+  pushing = true;
+  try { await DB.doc(PATH()).set({json: JSON.stringify(S), t: S.t}); } catch (e) {}
+  pushing = false;
+  if (pushAgain) { pushAgain = false; pushRemote(); }
+}
+(async () => {
+  try {
+    if (!window.claude || !claude.use) return;
+    const user = await claude.use('user'); const db = await claude.use('db');
+    if (!user || !db) return;
+    UID = await user.id(); DB = db;
+    const snap = await db.doc(PATH()).get();
+    if (snap.exists) {
+      const r = snap.data();
+      if (r && r.json) { const o = JSON.parse(r.json); if (o && o.v === 1 && (o.t || 0) > (S.t || 0)) { S = o; saveLocal(); render(); } else if ((S.t || 0) > (o.t || 0)) pushRemote(); }
+    } else if (S.t) pushRemote();
+  } catch (e) {}
+})();
+
+/* ---------- genel ---------- */
+let tab = 'bugun', sub = 'L', sel = null, ex = null, phOpen = {}, phWord = {}, bk = '', confirmReset = false;
+const streak = () => {
+  let d = todayS(); if (!(S.hist[d] && S.hist[d].done)) d = addDays(d, -1);
+  let n = 0; while (S.hist[d] && S.hist[d].done) { n++; d = addDays(d, -1); } return n;
+};
+const learnedN = () => Object.keys(S.items).length;
+const dueN = () => { const d = todayS(); return Object.values(S.items).filter(i => i.due <= d).length; };
+function itemInfo(it) {
+  return it.t === 'L' ? `${G(it.g)} = <strong>${esc(it.s)}</strong>` : `${G(it.g)} — <strong>${esc(it.o)}</strong> — ${esc(it.m)}`;
+}
+function breakdown(it) {
+  return `<div class="letters">${chars(it.g).map(c => `<div class="lt">${G(c)}<span>${esc(LG[c] ? LG[c].s : '?')}</span></div>`).join('')}</div>`;
+}
+
+/* ---------- günlük oturum ---------- */
+function startDay() {
+  const d = todayS();
+  const t = (S.today && S.today.date === d) ? S.today : {date: d, rounds: 0};
+  const nw = [];
+  for (let i = 0; i < 5 && S.intro < ITEMS.length; i++) { const id = ITEMS[S.intro].id; nw.push(id); S.intro++; S.items[id] = {box: 0, due: d, ok: 0, bad: 0}; }
+  const due = Object.keys(S.items).filter(id => !nw.includes(id) && S.items[id].due <= d);
+  due.sort((a, b) => S.items[a].box - S.items[b].box || (S.items[a].due < S.items[b].due ? -1 : 1));
+  let ids = nw.concat(due.slice(0, 12 - nw.length));
+  if (ids.length < 12) { const rest = shuf(Object.keys(S.items).filter(id => !ids.includes(id))); ids = ids.concat(rest.slice(0, 12 - ids.length)); }
+  const q = ids.map(id => ({id}));
+  for (let k = 0; q.length < 12 && ids.length; k++) q.push({id: ids[k % ids.length]});
+  Object.assign(t, {rounds: (t.rounds || 0) + 1, stage: nw.length ? 'learn' : 'quiz', li: 0, newIds: nw, queue: shuf(q), idx: 0, n: 0, c: 0});
+  S.today = t; ex = null; save(); render();
+}
+function pickType(q) {
+  const it = BY[q.id], st = S.items[q.id] || {box: 0};
+  let ts = it.t === 'L' ? ['lg2s', 'ls2g'] : (st.box >= 2 ? ['wg2r', 'wg2m', 'wm2g', 'wtile', 'wtype'] : ['wg2r', 'wg2m', 'wm2g']);
+  const bad = new Set([q.avoid, q.last].filter(Boolean));
+  const ok = ts.filter(x => !bad.has(x));
+  return shuf(ok.length ? ok : ts)[0];
+}
+function distract(it, n, key) {
+  const pool = ITEMS.filter(x => x.t === it.t && x.id !== it.id && key(x) !== key(it));
+  const near = it.t === 'L' ? pool.filter(x => x.cat === it.cat) : pool.filter(x => chars(x.g).length === chars(it.g).length);
+  const seen = new Set([key(it)]), out = [];
+  for (const x of shuf(near).concat(shuf(pool))) { const k = key(x); if (seen.has(k)) continue; seen.add(k); out.push(x); if (out.length >= n) break; }
+  return out;
+}
+function makeEx(q) {
+  const it = BY[q.id]; q.type = q.type || pickType(q);
+  const type = q.type, e = {type, it, done: false, ok: null};
+  const choice = (key, mk, correct) => {
+    const o = shuf([it].concat(distract(it, 3, key))).map(x => ({x, ok: x.id === it.id})); e.opts = o; e.mk = mk; e.mode = 'choice'; e.key = key;
+  };
+  if (type === 'lg2s') { e.q = 'Bu işaret hangi sesi gösterir?'; e.show = `<div class="show lg">${G(it.g)}</div>`; choice(x => x.s, x => esc(x.s)); e.g2 = true; }
+  if (type === 'ls2g') { e.q = 'Bu sesin işareti hangisi?'; e.show = `<div class="show"><div class="sound" style="font-family:var(--f-head);font-size:2rem;font-weight:700">${esc(it.s)}</div></div>`; choice(x => x.g, x => G(x.g)); e.g2 = true; e.glyph = true; }
+  if (type === 'wg2r') { e.q = 'Nasıl okunur?'; e.show = `<div class="show">${G(it.g)}</div>`; choice(x => x.o, x => esc(x.o)); }
+  if (type === 'wg2m') { e.q = 'Ne demek?'; e.show = `<div class="show">${G(it.g)}</div>`; choice(x => x.m, x => esc(x.m)); }
+  if (type === 'wm2g') { e.q = 'Bu sözcüğün yazılışı hangisi?'; e.show = `<div class="show"><strong style="font-family:var(--f-head);font-size:1.5rem">${esc(it.o)}</strong><div class="muted">${esc(it.m)}</div></div>`; choice(x => x.g, x => G(x.g)); e.glyph = true; }
+  if (type === 'wtile') {
+    e.q = 'Harflere sırayla dokunarak yaz'; e.show = `<div class="show"><strong style="font-family:var(--f-head);font-size:1.5rem">${esc(it.o)}</strong><div class="muted">${esc(it.m)}</div></div>`;
+    const real = chars(it.g), extra = shuf(D.L.filter(l => !real.includes(l.g))).slice(0, 2).map(l => l.g);
+    e.tiles = shuf(real.concat(extra)); e.pick = []; e.mode = 'tiles';
+  }
+  if (type === 'wtype') { e.q = 'Okunuşunu yaz'; e.show = `<div class="show">${G(it.g)}</div>`; e.mode = 'type'; }
+  return e;
+}
+const norm = s => s.toLowerCase().replace(/[äâ]/g, 'a').replace(/[ŋñ]/g, 'n').replace(/ğ/g, 'g').replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ç/g, 'c').replace(/[^a-z]/g, '');
+function record(ok) {
+  const T = S.today, q = T.queue[T.idx], it = S.items[q.id], d = todayS();
+  T.n++; if (ok) T.c++;
+  const h = S.hist[d] || (S.hist[d] = {n: 0, c: 0, done: false}); h.n++; if (ok) h.c++;
+  if (ok) { it.ok++; if (!q.retry) it.box = Math.min(it.box + 1, 4); it.due = addDays(d, INT[it.box]); }
+  else { it.bad++; it.box = 0; it.due = addDays(d, 1); if (!q.retry) T.queue.push({id: q.id, retry: true, avoid: q.type}); }
+  save();
+}
+function resolve(ok) { ex.done = true; ex.ok = ok; record(ok); render(); }
+function next() {
+  const T = S.today; T.idx++; ex = null;
+  if (T.idx >= T.queue.length) { T.stage = 'done'; const h = S.hist[todayS()] || (S.hist[todayS()] = {n: 0, c: 0, done: false}); h.done = true; }
+  save(); render();
+}
+
+/* ---------- görünümler ---------- */
+function vBugun() {
+  const T = (S.today && S.today.date === todayS()) ? S.today : null;
+  if (T && T.stage === 'learn') {
+    const it = BY[T.newIds[T.li]], last = T.li === T.newIds.length - 1;
+    return `<div class="hdr"><div class="bar"><i style="width:${(T.li + 1) / T.newIds.length * 100}%"></i></div><span class="pill">${T.li + 1}/${T.newIds.length}</span></div>
+    <div class="card raise"><p class="muted small" style="text-align:center">Yeni ${it.t === 'L' ? 'harf' : 'sözcük'}</p>
+    <div class="big ${it.t === 'W' ? 'w' : ''}">${G(it.g)}</div>
+    <div class="cap"><div class="sound">${esc(it.t === 'L' ? it.s : it.o)}</div>${it.t === 'W' ? `<div>${esc(it.m)}</div>` : ''}</div>
+    ${it.t === 'L' ? `<div class="note">${esc(it.note)}</div>${it.ex ? `<div class="ex"><span class="muted small">Örnek:</span>${G(BY[it.ex].g)}<span>${esc(BY[it.ex].o)} · ${esc(BY[it.ex].m)}</span></div>` : ''}` : `<p class="muted small" style="text-align:center;margin-top:10px">Harf harf (sağdan sola okunur):</p>${breakdown(it)}`}
+    </div>
+    <div class="row"><button class="btn" data-act="lprev" ${T.li === 0 ? 'disabled' : ''}>Geri</button><button class="btn main" style="flex:1" data-act="lnext">${last ? 'Alıştırmalara geç' : 'Sonraki'}</button></div>`;
+  }
+  if (T && T.stage === 'quiz') {
+    if (!ex) ex = makeEx(T.queue[T.idx]);
+    const e = ex, it = e.it;
+    let body = '';
+    if (e.mode === 'choice') {
+      body = `<div class="opts ${e.g2 ? 'g2' : ''}">${e.opts.map((o, i) => `<button class="opt ${e.glyph ? 'gl' : ''} ${e.done && o.ok ? 'right' : ''} ${e.done && e.sel === i && !o.ok ? 'wrong' : ''}" data-act="pick" data-i="${i}" ${e.done ? 'disabled' : ''}>${e.mk(o.x)}</button>`).join('')}</div>`;
+    } else if (e.mode === 'tiles') {
+      const got = e.pick.map(i => e.tiles[i]).join('');
+      body = `<div class="slots">${e.pick.map((ti, k) => `<button class="tile" data-act="untile" data-i="${k}" ${e.done ? 'disabled' : ''}><span class="gl">${e.tiles[ti]}</span></button>`).join('') || '<span class="muted small" style="direction:ltr">Harfler burada görünür</span>'}</div>
+      <div class="tiles">${e.tiles.map((c, i) => `<button class="tile ${e.pick.includes(i) ? 'used' : ''}" data-act="tile" data-i="${i}" ${e.done || e.pick.includes(i) ? 'disabled' : ''}><span class="gl">${c}</span></button>`).join('')}</div>
+      ${e.done ? '' : `<button class="btn main block" data-act="check" ${got ? '' : 'disabled'}>Kontrol et</button>`}`;
+    } else {
+      body = `<input class="txt" id="ti" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="örn. teŋri veya tengri" ${e.done ? 'disabled' : ''} value="${esc(e.val || '')}">
+      ${e.done ? '' : `<button class="btn main block" style="margin-top:10px" data-act="check">Kontrol et</button>`}`;
+    }
+    let fb = '';
+    if (e.done) fb = `<div class="fb ${e.ok ? 'ok' : 'no'}"><strong>${e.ok ? 'Doğru.' : 'Olmadı.'}</strong> ${itemInfo(it)}</div><button class="btn main block" data-act="next" id="nx">${T.idx + 1 >= T.queue.length ? 'Bitir' : 'Devam'}</button>`;
+    return `<div class="hdr"><div class="bar"><i style="width:${T.idx / T.queue.length * 100}%"></i></div><span class="pill">${T.idx + 1}/${T.queue.length}</span></div>
+      <div class="q">${e.q}</div>${e.show}${body}${fb}`;
+  }
+  if (T && T.stage === 'done') {
+    const pct = T.n ? Math.round(T.c / T.n * 100) : 0;
+    return `<div class="card raise"><h2>Bugünkü tur bitti</h2><p>${T.n} cevaptan <strong>${T.c}</strong> doğru (%${pct}).</p>
+      <div class="bar"><i style="width:${pct}%"></i></div></div>
+      <div class="card"><p class="muted small">Seri: <strong>${streak()}</strong> gün · Öğrenilen: <strong>${learnedN()}</strong>/${ITEMS.length}</p>
+      ${S.intro < ITEMS.length ? `<button class="btn block" data-act="start">5 yeni öğe daha, bir tur daha</button>` : `<button class="btn block" data-act="start">Bir tur daha tekrar</button>`}</div>`;
+  }
+  const nNew = Math.min(5, ITEMS.length - S.intro);
+  const nextIts = ITEMS.slice(S.intro, S.intro + nNew);
+  return `<div class="card raise"><h2>${S.intro ? 'Bugünün turu' : 'Hoş geldin'}</h2>
+    <p class="muted">12 alıştırma · ${nNew ? nNew + ' yeni öğe' : 'yeni öğe kalmadı'} · ${dueN()} tekrar vakti gelmiş.</p>
+    ${nNew ? `<div class="chips" style="margin-bottom:14px">${nextIts.map(x => `<div class="chip ${x.t === 'W' ? 'word' : ''}">${G(x.g)}</div>`).join('')}</div>` : ''}
+    <button class="btn main block" data-act="start">${S.intro ? 'Başla' : 'İlk dersi başlat'}</button></div>
+    <div class="card"><div class="row between"><span>Genel ilerleme</span><span class="muted small">${learnedN()} / ${ITEMS.length}</span></div>
+    <div class="bar" style="margin-top:8px"><i style="width:${learnedN() / ITEMS.length * 100}%"></i></div>
+    <p class="muted small" style="margin:10px 0 0">Önce 37 harf, sonra Kül Tigin yazıtından 137 sözcük. Günde 5 yeni öğe; yanlışlar ertesi güne, doğrular 1, 3, 7, 14, 30 gün sonrasına kalır.</p></div>`;
+}
+function vHarfler() {
+  const list = sub === 'L' ? D.L : D.W;
+  const dot = id => { const s = S.items[id]; return `<i class="${!s ? '' : s.box >= 2 ? 's2' : 's1'}"></i>`; };
+  let sheet = '';
+  if (sel && BY[sel]) {
+    const it = BY[sel];
+    sheet = `<div class="sheet"><div class="row between"><h3>${esc(it.t === 'L' ? it.s : it.o)}</h3><button class="btn sm ghost" data-act="selx">Kapat</button></div>
+      <div class="big ${it.t === 'W' ? 'w' : ''}" style="padding:4px 0">${G(it.g)}</div>
+      ${it.t === 'L' ? `<div class="note">${esc(it.note)}</div>${it.ex ? `<div class="ex">${G(BY[it.ex].g)}<span>${esc(BY[it.ex].o)} · ${esc(BY[it.ex].m)}</span></div>` : ''}` : `<p style="text-align:center">${esc(it.m)}</p>${breakdown(it)}`}</div>`;
+  }
+  return `<div class="row" style="margin-bottom:12px"><button class="btn sm ${sub === 'L' ? 'main' : ''}" data-act="sub" data-v="L">Harfler (${D.L.length})</button><button class="btn sm ${sub === 'W' ? 'main' : ''}" data-act="sub" data-v="W">Sözcükler (${D.W.length})</button></div>
+  ${sheet}<p class="muted small">Nokta: sarı öğreniliyor, yeşil pekişti. Dokununca ayrıntı açılır.</p>
+  <div class="grid">${list.map(x => `<button class="cell" data-act="sel" data-id="${x.id}" style="${sub === 'W' ? 'grid-column:span 2' : ''}">${dot(x.id)}${G(x.g)}<small>${esc(x.s || x.o)}</small></button>`).join('')}</div>`;
+}
+function phStat(p) {
+  const ids = [...new Set(p.w.map(x => x.v))], have = ids.filter(id => S.items[id]).length;
+  return {have, n: ids.length, open: have / ids.length >= 0.6};
+}
+function vOkuma() {
+  return `<p class="muted">Gerçek yazıt cümleleri (Kül Tigin). Sözcüklerin %60'ını öğrenince açılır. Sözcüğe dokun, okunuşu ve anlamı görünsün; önce kendin okumayı dene.</p>` + D.P.map(p => {
+    const st = phStat(p);
+    if (!st.open) return `<div class="ph"><div class="row between"><strong>${esc(p.ref)}</strong><span class="pill">Kilitli · ${st.have}/${st.n}</span></div><div class="phg" style="filter:blur(5px);opacity:.6">${p.w.map(w => G(w.g)).join(' ')}</div></div>`;
+    const wi = phWord[p.id], w = wi != null ? p.w[wi] : null;
+    return `<div class="ph"><div class="row between"><strong>${esc(p.ref)}</strong>${S.ph[p.id] ? '<span class="pill">Okundu</span>' : ''}</div>
+      <div class="phg">${p.w.map((x, i) => `<button class="wd ${wi === i ? 'on' : ''}" data-act="pw" data-p="${p.id}" data-i="${i}">${x.g}</button>${i < p.w.length - 1 ? '<span class="sep">:</span>' : ''}`).join('')}</div>
+      ${w ? `<div class="rd"><strong>${esc(w.o)}</strong> — ${esc(w.m)}</div>` : ''}
+      ${phOpen[p.id] ? `<div class="rd"><strong>${esc(p.tr)}</strong></div>` : ''}
+      <div class="row"><button class="btn sm" data-act="pt" data-p="${p.id}">${phOpen[p.id] ? 'Çeviriyi gizle' : 'Çeviriyi göster'}</button>${S.ph[p.id] ? '' : `<button class="btn sm main" data-act="pd" data-p="${p.id}">Okudum</button>`}</div></div>`;
+  }).join('');
+}
+function exw(o) { const w = D.W.find(x => x.o === o); return w ? `<div class="ex">${G(w.g)}<span>${esc(w.o)} · ${esc(w.m)}</span></div>` : ''; }
+function vBilgi() {
+  const k = (t, b, open) => `<details class="k" ${open ? 'open' : ''}><summary>${t}</summary><div class="body">${b}</div></details>`;
+  return k('Yazı sağdan sola okunur', `<p>Orhun (Göktürk) yazısı Arapça gibi sağdan sola gider. Sözcükler arasında genellikle iki nokta (:) durur. Uygulamada tüm işaretler sağdan sola dizilir.</p>${exw('türk')}${exw('kağan')}`, true) +
+    k('Ünlüler çoğu zaman yazılmaz', `<p>Dört ünlü işaret vardır: a/e, ı/i, o/u, ö/ü. Sözcük ortasında ve sonunda sık sık hiç yazılmaz; okuyucu sözcüğü tanıyarak tamamlar. Bu yüzden sözcük dağarcığı harfler kadar önemlidir.</p>${exw('teŋri')}`) +
+    k('Kalın ve ince ünsüzler', `<p>Birçok ünsüzün iki biçimi vardır: kalın (a, ı, o, u'lu sözcükler) ve ince (e, i, ö, ü'lü sözcükler). Yani ünsüzün şekli sözcüğün ünlü uyumunu da gösterir. Örnek: <b>b</b>, <b>d</b>, <b>g</b>, <b>y</b>, <b>k</b>, <b>l</b>, <b>r</b>, <b>s</b>, <b>t</b>, <b>n</b>. Tek biçimli olanlar: m, z, p, ş, ç.</p>${exw('bodun')}${exw('bilge')}`) +
+    k('Çift sesli işaretler', `<p>Bazı işaretler iki sesi birden taşır: nç, ŋ, nt, ny, lt, ık, ok/uk, ök/ük. Tablonda bunları ayrı öğrenirsin.</p><div class="chips">${D.L.filter(l => l.cat === 'çift').map(l => `<div class="chip" title="${esc(l.s)}"><span style="display:flex;flex-direction:column;align-items:center"><span class="gl">${l.g}</span><small style="font-size:.7rem;font-family:var(--f-body);font-weight:700">${esc(l.s)}</small></span></div>`).join('')}</div>`) +
+    k('37 mi, 38 mi?', `<p>Elindeki Damga Alfabesi tablosunda 38 işaret var; ç için iki şekil gösteriliyor. Kül Tigin metninde yalnızca biri geçtiği için uygulamada 37 harf var.</p>`) +
+    k('Kaynak ve not', `<p>Sözcükler ve cümleler Vikikaynak'taki Kül Tigin yazıtı metninden alındı; okunuşlar ve anlamlar oradaki çevriyazıya ve Türkiye Türkçesi çevirisine dayanır. Aynı sözcüğün yazıtta farklı yazılışları olabilir; uygulama en sık geçen biçimi kullanır. Harfler için "Noto Sans Old Turkic" yazı tipi internetten yüklenir.</p>`);
+}
+function vIlerleme() {
+  const days = []; for (let i = 13; i >= 0; i--) days.push(addDays(todayS(), -i));
+  const mx = Math.max(10, ...days.map(d => (S.hist[d] || {}).n || 0));
+  const bars = days.map((d, i) => { const h = S.hist[d] || {n: 0, c: 0}, H = 60, a = h.n / mx * H, b = h.c / mx * H; return `<rect class="b2" x="${i * 20 + 4}" y="${70 - a}" width="14" height="${a}" rx="2"/><rect class="b1" x="${i * 20 + 4}" y="${70 - b}" width="14" height="${b}" rx="2"/><text x="${i * 20 + 11}" y="82" text-anchor="middle">${+d.slice(8)}</text>`; }).join('');
+  const weak = Object.entries(S.items).filter(([, s]) => s.bad > 0).sort((a, b) => b[1].bad - a[1].bad).slice(0, 6);
+  const mastered = Object.values(S.items).filter(s => s.box >= 3).length;
+  const tot = Object.values(S.hist).reduce((a, h) => a + h.n, 0), cor = Object.values(S.hist).reduce((a, h) => a + h.c, 0);
+  return `<div class="card raise"><div class="stat"><span class="pill">Seri <b>${streak()}</b> gün</span><span class="pill">Öğrenilen <b>${learnedN()}</b>/${ITEMS.length}</span><span class="pill">Pekişen <b>${mastered}</b></span><span class="pill">Doğruluk <b>${tot ? Math.round(cor / tot * 100) : 0}%</b></span></div>
+    <h3 style="margin:16px 0 6px">Son 14 gün (cevap sayısı)</h3>
+    <svg class="chart" viewBox="0 0 284 88" width="100%" role="img" aria-label="Son 14 günün cevap sayısı">${bars}</svg></div>
+    <div class="card"><h3 style="margin-bottom:8px">Zorlandıkların</h3>${weak.length ? `<div class="chips">${weak.map(([id, s]) => `<div class="chip ${BY[id].t === 'W' ? 'word' : ''}" title="${s.bad} yanlış">${G(BY[id].g)}</div>`).join('')}</div>` : '<p class="muted small">Henüz yanlış yok.</p>'}</div>
+    <div class="card"><h3 style="margin-bottom:8px">Yedek</h3><p class="muted small">İlerleme bu hesapta ve bu tarayıcıda saklanır. Yedeği kopyalayıp başka yere yapıştırabilirsin.</p>
+    <div class="row" style="margin-bottom:8px"><button class="btn sm" data-act="bkshow">Yedeği göster</button><button class="btn sm" data-act="bkload">Yedeği yükle</button></div>
+    <textarea class="bk" id="bk" placeholder="Yedek metni burada">${esc(bk)}</textarea>
+    <div style="margin-top:12px">${confirmReset ? `<p class="small">Tüm ilerleme silinsin mi?</p><div class="row"><button class="btn sm" data-act="rs2" style="border-color:var(--bad);color:var(--bad)">Evet, sil</button><button class="btn sm ghost" data-act="rs0">Vazgeç</button></div>` : `<button class="btn sm ghost" data-act="rs1">İlerlemeyi sıfırla</button>`}</div></div>`;
+}
+const ICONS = {
+  bugun: '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',
+  harf: '<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
+  oku: '<path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-7"/><path d="M20 5v12h-7"/>',
+  bilgi: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>',
+  ilerle: '<path d="M5 20V10M12 20V4M19 20v-7"/>'
+};
+const TABS = [['bugun', 'Bugün', 'bugun'], ['harf', 'Harfler', 'harf'], ['oku', 'Okuma', 'oku'], ['bilgi', 'Bilgi', 'bilgi'], ['ilerle', 'İlerleme', 'ilerle']];
+function render() {
+  const v = {bugun: vBugun, harf: vHarfler, oku: vOkuma, bilgi: vBilgi, ilerle: vIlerleme}[tab]();
+  const title = {bugun: 'Göktürk Defteri', harf: 'Harfler ve sözcükler', oku: 'Yazıttan okuma', bilgi: 'Bilgi', ilerle: 'İlerleme'}[tab];
+  $('#app').innerHTML = `<div class="wrap"><div class="top"><div><h1>${title}</h1>${tab === 'bugun' ? '<div class="sub">Orhun yazıtları · Kül Tigin</div>' : ''}</div>${tab === 'bugun' ? `<div class="stat"><span class="pill">Seri <b>${streak()}</b></span></div>` : ''}</div>${v}</div>
+  <nav class="tabs"><div class="tabs-in">${TABS.map(([id, l, ic]) => `<button class="tab" data-act="tab" data-id="${id}" ${tab === id ? 'aria-current="page"' : ''}><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[ic]}</svg>${l}</button>`).join('')}</div></nav>`;
+  if (ex && ex.mode === 'type' && !ex.done) { const i = $('#ti'); if (i) { i.addEventListener('keydown', e => { if (e.key === 'Enter') act('check'); }); } }
+}
+/* ---------- olaylar ---------- */
+function act(a, el) {
+  const T = S.today;
+  if (a === 'tab') { tab = el.dataset.id; sel = null; render(); window.scrollTo(0, 0); }
+  else if (a === 'start') startDay();
+  else if (a === 'lnext') { if (T.li >= T.newIds.length - 1) { T.stage = 'quiz'; T.idx = 0; ex = null; save(); } else T.li++; render(); window.scrollTo(0, 0); }
+  else if (a === 'lprev') { if (T.li > 0) T.li--; render(); }
+  else if (a === 'pick' && ex && !ex.done) { const i = +el.dataset.i; ex.sel = i; resolve(ex.opts[i].ok); }
+  else if (a === 'tile' && ex && !ex.done) { ex.pick.push(+el.dataset.i); render(); }
+  else if (a === 'untile' && ex && !ex.done) { ex.pick.splice(+el.dataset.i, 1); render(); }
+  else if (a === 'check' && ex && !ex.done) {
+    if (ex.mode === 'tiles') resolve(ex.pick.map(i => ex.tiles[i]).join('') === ex.it.g);
+    else { const v = ($('#ti') || {}).value || ''; if (!norm(v)) return; ex.val = v; resolve(norm(v) === norm(ex.it.o)); }
+  }
+  else if (a === 'next') next();
+  else if (a === 'sub') { sub = el.dataset.v; sel = null; render(); }
+  else if (a === 'sel') { sel = el.dataset.id; render(); window.scrollTo(0, 0); }
+  else if (a === 'selx') { sel = null; render(); }
+  else if (a === 'pw') { const p = el.dataset.p, i = +el.dataset.i; phWord[p] = phWord[p] === i ? null : i; render(); }
+  else if (a === 'pt') { phOpen[el.dataset.p] = !phOpen[el.dataset.p]; render(); }
+  else if (a === 'pd') { S.ph[el.dataset.p] = 1; save(); render(); }
+  else if (a === 'bkshow') { bk = JSON.stringify(S); render(); }
+  else if (a === 'bkload') {
+    try { const o = JSON.parse(($('#bk') || {}).value || ''); if (o && o.v === 1 && o.items) { S = o; save(); bk = ''; ex = null; render(); } else bk = 'Geçersiz yedek.'; } catch (e) { bk = 'Geçersiz yedek.'; } render();
+  }
+  else if (a === 'rs1') { confirmReset = true; render(); }
+  else if (a === 'rs0') { confirmReset = false; render(); }
+  else if (a === 'rs2') { S = fresh(); save(); confirmReset = false; ex = null; render(); }
+}
+document.addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (el && !el.disabled) act(el.dataset.act, el); });
+render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script></body></html>
