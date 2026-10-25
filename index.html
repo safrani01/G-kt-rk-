@@ -147,6 +147,8 @@ textarea.bk{width:100%;min-height:110px;border-radius:12px;border:1px solid var(
 svg.chart text{fill:var(--muted);font-size:10px;font-family:var(--f-body)}
 svg.chart .b1{fill:var(--sky)} svg.chart .b2{fill:var(--line)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+a.btn{text-decoration:none;color:inherit}
+a.btn.main{color:var(--sky-ink)}
 </style>
 <div id="app"></div>
 <script>
@@ -379,9 +381,13 @@ function vFrazlar() {
   }).join('');
 }
 function exw(o) { const w = D.W.find(x => x.o === o); return w ? `<div class="ex">${G(w.g)}<span>${esc(w.o)} · ${esc(w.m)}</span></div>` : ''; }
+function ytCard() {
+  return `<div class="card raise"><h2>Daha fazlasını öğren</h2><p class="muted">Alıştırmalar harfleri ve okumayı oturtur. Göktürk yazısını derinlemesine öğrenmek isteyenler için bu alanda çalışan Gökbey Uluç'un YouTube kanalı güzel bir devam kaynağı.</p>
+    <a class="btn main block" href="https://www.youtube.com/@gokbeyuluc" target="_blank" rel="noopener noreferrer">YouTube kanalına git: Gökbey Uluç</a></div>`;
+}
 function vBilgi() {
   const k = (t, b, open) => `<details class="k" ${open ? 'open' : ''}><summary>${t}</summary><div class="body">${b}</div></details>`;
-  return k('Yazı sağdan sola okunur', `<p>Orhun (Göktürk) yazısı Arapça gibi sağdan sola gider. Sözcükler arasında genellikle iki nokta (:) durur. Uygulamada tüm işaretler sağdan sola dizilir.</p>${exw('türk')}${exw('kağan')}`, true) +
+  return ytCard() + k('Yazı sağdan sola okunur', `<p>Orhun (Göktürk) yazısı Arapça gibi sağdan sola gider. Sözcükler arasında genellikle iki nokta (:) durur. Uygulamada tüm işaretler sağdan sola dizilir.</p>${exw('türk')}${exw('kağan')}`, true) +
     k('Ünlüler çoğu zaman yazılmaz', `<p>Dört ünlü işaret vardır: a/e, ı/i, o/u, ö/ü. Sözcük ortasında ve sonunda sık sık hiç yazılmaz; okuyucu sözcüğü tanıyarak tamamlar. Bu yüzden sözcük dağarcığı harfler kadar önemlidir.</p>${exw('teŋri')}`) +
     k('Kalın ve ince ünsüzler', `<p>Birçok ünsüzün iki biçimi vardır: kalın (a, ı, o, u'lu sözcükler) ve ince (e, i, ö, ü'lü sözcükler). Yani ünsüzün şekli sözcüğün ünlü uyumunu da gösterir. Örnek: <b>b</b>, <b>d</b>, <b>g</b>, <b>y</b>, <b>k</b>, <b>l</b>, <b>r</b>, <b>s</b>, <b>t</b>, <b>n</b>. Tek biçimli olanlar: m, z, p, ş, ç.</p>${exw('bodun')}${exw('bilge')}`) +
     k('Çift sesli işaretler', `<p>Bazı işaretler iki sesi birden taşır: nç, ŋ, nt, ny, lt, ık, ok/uk, ök/ük. Tablonda bunları ayrı öğrenirsin.</p><div class="chips">${D.L.filter(l => l.cat === 'çift').map(l => `<div class="chip" title="${esc(l.s)}"><span style="display:flex;flex-direction:column;align-items:center"><span class="gl">${l.g}</span><small style="font-size:.7rem;font-family:var(--f-body);font-weight:700">${esc(l.s)}</small></span></div>`).join('')}</div>`) +
