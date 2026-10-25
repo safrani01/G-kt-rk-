@@ -1,4 +1,4 @@
-const V='gokturk-v4', FONTS='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Sans+Old+Turkic&display=swap';
+const V='gokturk-v5', FONTS='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Hanken+Grotesk:wght@400;500;600;700&family=Noto+Sans+Old+Turkic&display=swap';
 const LOCAL=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png','./icons/apple-touch-icon.png'];
 self.addEventListener('install',e=>{e.waitUntil((async()=>{
   const c=await caches.open(V); await c.addAll(LOCAL);
